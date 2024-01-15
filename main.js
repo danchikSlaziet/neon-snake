@@ -4,6 +4,71 @@
  **/
 const infoPage = document.querySelector('.info-page');
 const infoPageButton = infoPage.querySelector('.info-page__button');
+const infoPageText = infoPage.querySelector('.info-page__text');
+const controlsBlock = document.getElementById('controls');
+const infoPC = document.querySelector('.info-pc');
+const settingsButton = document.querySelector('.settings-btn');
+const settingsPage = document.querySelector('.settings-page');
+const settingsPageClose = settingsPage.querySelector('.settings-page__close');
+const settingsPageInput = settingsPage.querySelector('.settings-page__color-input');
+const settingsPageButton = settingsPage.querySelector('.settings-page__button');
+const settingsPageSpeed = settingsPage.querySelector('#speed');
+
+let hexSnake = '';
+let speedSnake;
+
+const getHexadecimalColors = str => {
+  const hexColor = /#([a-f0-9]{6}|[a-f0-9]{3})\b/gi;
+  return str.match(hexColor);
+};
+
+settingsPageButton.addEventListener('click', () => {
+  hexSnake = settingsPageInput.value.trim();
+  if (settingsPageSpeed.value === 'low') {
+    speedSnake = 15;
+  }
+  if (settingsPageSpeed.value === 'medium') {
+    speedSnake = 5;
+  }
+  if (settingsPageSpeed.value === 'high') {
+    speedSnake = 1;
+  }
+  reset();
+});
+
+settingsButton.addEventListener('click', () => {
+  settingsPage.classList.add('settings-page_active');
+});
+
+settingsPageClose.addEventListener('click', () => {
+  settingsPage.classList.remove('settings-page_active');
+})
+
+infoPageButton.addEventListener('click', () => {
+  infoPage.classList.remove('info-page_active');
+  continiue();
+});
+
+// document.addEventListener('click', (evt) => {
+//   console.log(evt.currentTarget)
+//   if (evt.target.className.includes('info-page_active')) {
+//     infoPage.classList.remove('info-page_active');
+//     continiue();
+//   }
+// });
+
+let detect = new MobileDetect(window.navigator.userAgent);
+
+if (detect.os() == null) {
+  console.log('It is PC');
+  controlsBlock.style.display = 'none';
+}
+
+else {
+  infoPC.style.display = 'none';
+}
+
+
 let dom_replay = document.querySelector("#replay");
 let dom_score = document.querySelector("#score");
 let dom_canvas = document.createElement("canvas");
@@ -203,9 +268,9 @@ class Snake {
     this.dir = new helpers.Vec(0, 0);
     this.type = type;
     this.index = i;
-    this.delay = 5;
+    this.delay = speedSnake ? speedSnake : 5;
     this.size = W / cells;
-    this.color = "white";
+    this.color = hexSnake ? hexSnake : "white";
     this.history = [];
     this.total = 1;
   }
@@ -220,7 +285,7 @@ class Snake {
       for (let i = 0; i < this.history.length - 1; i++) {
         let { x, y } = this.history[i];
         CTX.lineWidth = 1;
-        CTX.fillStyle = "white";
+        CTX.fillStyle = hexSnake ? hexSnake : "white";
         CTX.fillRect(x, y, this.size, this.size);
       }
     }
@@ -279,7 +344,7 @@ class Snake {
         this.history[i] = this.history[i + 1];
       }
       this.pos.add(this.dir);
-      this.delay = 5;
+      this.delay = speedSnake ? speedSnake : 5;
       this.total > 3 ? this.selfCollision() : null;
     }
   }
@@ -360,6 +425,13 @@ function incrementScore() {
       infoPage.classList.add('info-page_active');
     }, 200)
   }
+  if (score === 3) {
+    setTimeout(() => {
+      pause();
+      infoPageText.textContent = 'Поздравляем, ты набрал 3 очка! Интересный факт об этой цифре - Бог любит троицу';
+      infoPage.classList.add('info-page_active');
+    }, 200)
+  }
 }
 
 function particleSplash() {
@@ -411,6 +483,7 @@ function continiue() {
 }
 
 function gameOver() {
+  infoPageText.textContent = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus praesentium nemo cum sapiente repudiandae quam delectus laboriosam non. Quos ullam quasi ratione. Ipsa iure officiis illum voluptatum odio ipsum fugit?';
   maxScore ? null : (maxScore = score);
   score > maxScore ? (maxScore = score) : null;
   window.localStorage.setItem("maxScore", maxScore);
@@ -424,6 +497,7 @@ function gameOver() {
 }
 
 function reset() {
+  infoPageText.textContent = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus praesentium nemo cum sapiente repudiandae quam delectus laboriosam non. Quos ullam quasi ratione. Ipsa iure officiis illum voluptatum odio ipsum fugit?';
   dom_score.innerText = "00";
   score = "00";
   snake = new Snake();

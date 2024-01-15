@@ -14,11 +14,32 @@
         <button class="info-page__button" type="button">ПОНЯТНО</button>
       </div>
     </div>
+    <div class="settings-page">
+      <div class="settings-page__close">X</div>
+      <div class="settings-page__block">
+        <p>Скорость</p>
+        <select name="speed" id="speed">
+          <option value="low">низкая</option>
+          <option selected value="medium">средняя</option>
+          <option value="high">смерть</option>
+        </select>
+      </div>
+      <div class="settings-page__block">
+        <p>Цвет змейки (hex-формат)</p>
+        <input class="settings-page__color-input" type="text" placeholder="введите hex вместе с #">
+      </div>
+      <button class="settings-page__button" type="button">Подтвердить</button>
+    </div>
     <div class="wrapper">
-      <button id="replay">
-        <i class="fas fa-play"></i>
-        ЗАНОВО
-      </button>
+      <div class="wrapper__buttons">
+        <button id="replay">
+          <i class="fas fa-play"></i>
+          ЗАНОВО
+        </button>
+        <button class="settings-btn" type="button">
+          <img class="settings-btn__image" src="./images/settings.svg" alt="">
+        </button>
+      </div>
       <div id="canvas">
   
       </div>
@@ -26,6 +47,9 @@
         <h2>SCORE
         </h2>
         <span id="score">00</span>
+      </div>
+      <div class="info-pc">
+        <p class="info-pc__text">Чтобы начать игру, нажмите одну из клавишей  ←&nbsp;&nbsp;&nbsp;→&nbsp;&nbsp;&nbsp;↑&nbsp;&nbsp;&nbsp;↓.</p>
       </div>
       <div id="controls">
         <div class="top-control">
@@ -41,6 +65,7 @@
       </div>
     </div>
   </div>
+  <script src="mobile-detect.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
