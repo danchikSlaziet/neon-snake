@@ -14,13 +14,74 @@ const settingsPageInput = settingsPage.querySelector('.settings-page__color-inpu
 const settingsPageButton = settingsPage.querySelector('.settings-page__button');
 const settingsPageSpeed = settingsPage.querySelector('#speed');
 
+const img = document.querySelector('.controls__arrow');
+
 let hexSnake = '';
 let speedSnake;
+let buildWalls = false;
 
-const getHexadecimalColors = str => {
-  const hexColor = /#([a-f0-9]{6}|[a-f0-9]{3})\b/gi;
-  return str.match(hexColor);
-};
+$('.select').each(function(){
+  // Variables
+  var $this = $(this),
+    selectOption = $this.find('option'),
+    selectOptionLength = selectOption.length,
+    selectedOption = selectOption.filter(':selected'),
+    dur = 500;
+
+  $this.hide();
+  // Wrap all in select box
+  $this.wrap('<div class="select"></div>');
+  // Style box
+  $('<div>',{
+    class: 'select__gap',
+    text: 'Выбрать из списка'
+  }).insertAfter($this);
+  
+  var selectGap = $this.next('.select__gap'),
+    caret = selectGap.find('.caret');
+  // Add ul list
+  $('<ul>',{
+    class: 'select__list'
+  }).insertAfter(selectGap);		
+
+  var selectList = selectGap.next('.select__list');
+  // Add li - option items
+  for(var i = 0; i < selectOptionLength; i++){
+    $('<li>',{
+      class: 'select__item',
+      html: $('<span>',{
+        text: selectOption.eq(i).text()
+      })				
+    })
+    .attr('data-value', selectOption.eq(i).val())
+    .appendTo(selectList);
+  }
+  // Find all items
+  var selectItem = selectList.find('li');
+
+  selectList.slideUp(0);
+  selectGap.on('click', function(){
+    if(!$(this).hasClass('on')){
+      $(this).addClass('on');
+      selectList.slideDown(dur);
+
+      selectItem.on('click', function(){
+        var chooseItem = $(this).data('value');
+
+        $('select').val(chooseItem).attr('selected', 'selected');
+        selectGap.text($(this).find('span').text());
+
+        selectList.slideUp(dur);
+        selectGap.removeClass('on');
+      });
+      
+    } else {
+      $(this).removeClass('on');
+      selectList.slideUp(dur);
+    }
+  });		
+
+});
 
 settingsPageButton.addEventListener('click', () => {
   hexSnake = settingsPageInput.value.trim();
@@ -83,6 +144,7 @@ let snake,
   currentHue,
   cells = 20,
   cellSize,
+  walls,
   isGameOver = false,
   tails = [],
   score = 0,
@@ -320,6 +382,13 @@ class Snake {
       this.dir = new helpers.Vec(dir, 0);
     }
   }
+  wallsCollision() {
+    walls.pos.forEach((elem) => {
+      if (helpers.isCollision(this.pos, elem)) {
+        isGameOver = true;
+      }
+    });
+  }
   selfCollision() {
     for (let i = 0; i < this.history.length; i++) {
       let p = this.history[i];
@@ -331,6 +400,9 @@ class Snake {
   update() {
     this.walls();
     this.draw();
+    if (buildWalls) {
+      this.wallsCollision();
+    }
     this.controlls();
     if (!this.delay--) {
       if (helpers.isCollision(this.pos, food.pos)) {
@@ -350,6 +422,21 @@ class Snake {
   }
 }
 
+class Walls {
+  constructor() {
+    this.pos = [new helpers.Vec(W / 20, H / 2), new helpers.Vec(W / 10, H / 2), new helpers.Vec(W / 5, H / 2), new helpers.Vec(W / 5, H / 20), new helpers.Vec(W / 5, H / 10), new helpers.Vec(W / 5, H / 5), new helpers.Vec(W / 10, H / 2), new helpers.Vec(W / 4, H / 5)];
+  }
+  draw() {
+    if (buildWalls) {
+      this.pos.forEach((elem) => {
+        let {x, y} = elem;
+        CTX.fillStyle = "black";
+        CTX.fillRect(x, y, cellSize, cellSize);
+      });
+    }
+  }
+}
+
 class Food {
   constructor() {
     this.pos = new helpers.Vec(
@@ -365,13 +452,38 @@ class Food {
     CTX.shadowBlur = 20;
     CTX.shadowColor = this.color;
     CTX.fillStyle = this.color;
-    CTX.fillRect(x, y, this.size, this.size);
+    if (score === 1) {
+      CTX.drawImage(img, x, y, this.size, this.size);
+    }
+    else if (score === 4) {
+      CTX.drawImage(img, x, y, this.size, this.size);
+    }
+    else {
+      CTX.fillRect(x, y, this.size, this.size);
+    }
     CTX.globalCompositeOperation = "source-over";
     CTX.shadowBlur = 0;
+  }
+  wallsCollision(x, y) {
+    this.bool = false;
+    walls.pos.forEach((elem) => {
+      if (elem.x == x && elem.y == y) {
+        this.bool = true;
+        return;
+      }
+    });
   }
   spawn() {
     let randX = ~~(Math.random() * cells) * this.size;
     let randY = ~~(Math.random() * cells) * this.size;
+    if (buildWalls) {
+      this.wallsCollision(randX, randY);
+      while (this.bool) {
+        randX = ~~(Math.random() * cells) * this.size;
+        randY = ~~(Math.random() * cells) * this.size;
+        this.wallsCollision(randX, randY);
+      }
+    }
     for (let path of snake.history) {
       if (helpers.isCollision(new helpers.Vec(randX, randY), path)) {
         return this.spawn();
@@ -419,16 +531,18 @@ class Particle {
 function incrementScore() {
   score++;
   dom_score.innerText = score.toString().padStart(2, "0");
-  if (score === 1) {
+  if (score === 2) {
+    buildWalls = true;
     setTimeout(() => {
       pause();
       infoPage.classList.add('info-page_active');
-    }, 200)
+    }, 200);
   }
-  if (score === 3) {
+  if (score === 5) {
+    buildWalls = false;
     setTimeout(() => {
       pause();
-      infoPageText.textContent = 'Поздравляем, ты набрал 3 очка! Интересный факт об этой цифре - Бог любит троицу';
+      infoPageText.textContent = 'Поздравляем, ты снова собрал стрелочку! Теперь кайфуй без препятствий.';
       infoPage.classList.add('info-page_active');
     }, 200)
   }
@@ -453,6 +567,7 @@ function initialize() {
   cellSize = W / cells;
   snake = new Snake();
   food = new Food();
+  walls = new Walls();
   dom_replay.addEventListener("click", reset, false);
   loop();
 }
@@ -464,6 +579,7 @@ function loop() {
     helpers.drawGrid();
     snake.update();
     food.draw();
+    walls.draw();
     for (let p of particles) {
       p.update();
     }
@@ -483,7 +599,7 @@ function continiue() {
 }
 
 function gameOver() {
-  infoPageText.textContent = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus praesentium nemo cum sapiente repudiandae quam delectus laboriosam non. Quos ullam quasi ratione. Ipsa iure officiis illum voluptatum odio ipsum fugit?';
+  infoPageText.textContent = 'Ты поймал волшебную стрелку! Теперь появились чёрные препятствия, избегай их.';
   maxScore ? null : (maxScore = score);
   score > maxScore ? (maxScore = score) : null;
   window.localStorage.setItem("maxScore", maxScore);
@@ -497,10 +613,11 @@ function gameOver() {
 }
 
 function reset() {
-  infoPageText.textContent = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus praesentium nemo cum sapiente repudiandae quam delectus laboriosam non. Quos ullam quasi ratione. Ipsa iure officiis illum voluptatum odio ipsum fugit?';
+  infoPageText.textContent = 'Ты поймал волшебную стрелку! Теперь появились чёрные препятствия, избегай их.';
   dom_score.innerText = "00";
   score = "00";
   snake = new Snake();
+  buildWalls = false;
   food.spawn();
   KEY.resetState();
   isGameOver = false;

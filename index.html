@@ -10,19 +10,26 @@
   <div class="container noselect">
     <div class="info-page">
       <div class="info-page__content">
-        <p class="info-page__text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus praesentium nemo cum sapiente repudiandae quam delectus laboriosam non. Quos ullam quasi ratione. Ipsa iure officiis illum voluptatum odio ipsum fugit?</p>
+        <p class="info-page__text">
+          Ты поймал волшебную стрелку! Теперь появились чёрные препятствия, избегай их.
+        </p>
         <button class="info-page__button" type="button">ПОНЯТНО</button>
       </div>
     </div>
     <div class="settings-page">
-      <div class="settings-page__close">X</div>
+      <div class="settings-page__close">
+        <img class="settings-page__close-img" src="./images/close.svg" alt="">
+      </div>
       <div class="settings-page__block">
         <p>Скорость</p>
-        <select name="speed" id="speed">
-          <option value="low">низкая</option>
-          <option selected value="medium">средняя</option>
-          <option value="high">смерть</option>
-        </select>
+        <div class="select-wrapper">
+          <select class="settings-page__select select" name="speed" id="speed">
+            <option value="low">низкая</option>
+            <option selected value="medium">средняя</option>
+            <option value="high">смерть</option>
+          </select>
+          <div class="select-arrow-1"></div>
+        </div>
       </div>
       <div class="settings-page__block">
         <p>Цвет змейки (hex-формат)</p>
@@ -65,6 +72,7 @@
       </div>
     </div>
   </div>
+  <script src="jquery.min.js"></script>
   <script src="mobile-detect.min.js"></script>
   <script src="main.js"></script>
 </body>
