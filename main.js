@@ -107,7 +107,7 @@ settingsPageClose.addEventListener('click', () => {
 
 infoPageButton.addEventListener('click', () => {
   infoPage.classList.remove('info-page_active');
-  continiue();
+  setTimeout(() => {  continiue();}, 400)
 });
 
 // document.addEventListener('click', (evt) => {
@@ -476,14 +476,20 @@ class Food {
   spawn() {
     let randX = ~~(Math.random() * cells) * this.size;
     let randY = ~~(Math.random() * cells) * this.size;
-    if (buildWalls) {
+    // if (buildWalls) {
+    //   this.wallsCollision(randX, randY);
+    //   while (this.bool) {
+    //     randX = ~~(Math.random() * cells) * this.size;
+    //     randY = ~~(Math.random() * cells) * this.size;
+    //     this.wallsCollision(randX, randY);
+    //   }
+    // }
       this.wallsCollision(randX, randY);
       while (this.bool) {
         randX = ~~(Math.random() * cells) * this.size;
         randY = ~~(Math.random() * cells) * this.size;
         this.wallsCollision(randX, randY);
       }
-    }
     for (let path of snake.history) {
       if (helpers.isCollision(new helpers.Vec(randX, randY), path)) {
         return this.spawn();
@@ -533,18 +539,14 @@ function incrementScore() {
   dom_score.innerText = score.toString().padStart(2, "0");
   if (score === 2) {
     buildWalls = true;
-    setTimeout(() => {
-      pause();
-      infoPage.classList.add('info-page_active');
-    }, 200);
+    pause();
+    infoPage.classList.add('info-page_active');
   }
   if (score === 5) {
     buildWalls = false;
-    setTimeout(() => {
-      pause();
-      infoPageText.textContent = 'Поздравляем, ты снова собрал стрелочку! Теперь кайфуй без препятствий.';
-      infoPage.classList.add('info-page_active');
-    }, 200)
+    pause();
+    infoPageText.textContent = 'Поздравляем, ты снова собрал стрелочку! Теперь кайфуй без препятствий.';
+    infoPage.classList.add('info-page_active');
   }
 }
 
