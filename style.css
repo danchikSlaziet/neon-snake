@@ -1,6 +1,14 @@
-@font-face {
-  font-family: "game";
-  src: url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;800&display=swap");
+@font-face{
+  font-family: "TT";
+  src: url("./fonts/TTRuns.ttf") format('ttf'), url("./fonts/TTRuns.woff") format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face{
+  font-family: "TT";
+  src: url("./fonts/TTRuns-Regular.ttf") format('ttf'), url("./fonts/TTRuns-Regular.woff") format('woff');
+  font-weight: 400;
+  font-style: normal;
 }
 * {
   padding: 0;
@@ -14,16 +22,17 @@ button:focus {
 html,
 body {
   height: 100%;
-  font-family: "Poppins", sans-serif;
-  color: #6e7888;
+  font-family: "TT", sans-serif;
+  color: #FFF;
 }
 body {
-  background-color: #222738;
+  background-image: url(./images/main-bg.jpg);
+  background-size: cover;
+  background-position: center center;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #6e7888;
-  overflow-y: hidden;
 }
 canvas {
   background-color: #181825;
@@ -445,4 +454,145 @@ border-top: 14px solid #6e7888;
 .settings-page__color-input::placeholder {
   font-size: 20px;
   color: #6e7888;
+}
+
+
+
+
+
+.exit-button {
+  position: absolute;
+  top: 31px;
+  left: 21px;
+  z-index: 1000;
+}
+.exit-button:hover {
+  cursor: pointer;
+}
+.first-page {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility .24s, opacity .24s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  flex-direction: column;
+  background-image: url(./images/main-bg.jpg);
+  background-size: cover;
+  background-position: center center;
+}
+.first-page_active {
+  visibility: visible;
+  opacity: 1;
+}
+.first-page__rocket-help {
+  position: absolute;
+  bottom: -350px;
+  left: 0;
+  right: 0;
+  height: 800px;
+  background-image: url(./images/first-page-help.svg);
+  background-size: cover;
+  background-position: center center;
+  padding: 0 22px;
+}
+.first-page__moon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  animation: do-levitation-X 1.5s alternate ease-in-out infinite;
+}
+.first-page__rocket {
+  position: absolute;
+  top: -170px;
+  left: 35px;
+  z-index: -1;
+  animation: do-levitation-y 1s alternate ease-in-out infinite;
+}
+.first-page__title {
+  font-family: "TT";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #FFF;
+  margin-bottom: 11px;
+  margin-top: 120px;
+}
+.first-page__subtitle {
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #8575C3;
+  margin-bottom: 15px;
+}
+.first-page__help {
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #433090;
+}
+.first-page__button {
+  margin-top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  position: fixed;
+  bottom: 28px;
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #FFF;
+  padding: 17px 5px 18px 5px;
+  width: calc(100% - 44px);
+  outline: none;
+  border: none;
+  border: 1px solid #FFFFFF21;
+  border-radius: 18px;
+  transition: opacity .24s linear;
+  background: linear-gradient(92.28deg, #5D36FF 2.57%, #BF07FF 109.75%), linear-gradient(0deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15));
+}
+
+@keyframes do-levitation-y {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(7px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+}
+@keyframes do-levitation-X {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(7px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.first-page__button:hover {
+  opacity: .7;
 }

@@ -2,6 +2,8 @@
  * Snake game created with plain JavaScript by Ibrahim fariat.
  * Follow me if you like it!
  **/
+let snakePos;
+let currentDegree;
 const infoPage = document.querySelector('.info-page');
 const infoPageButton = infoPage.querySelector('.info-page__button');
 const infoPageText = infoPage.querySelector('.info-page__text');
@@ -14,7 +16,35 @@ const settingsPageInput = settingsPage.querySelector('.settings-page__color-inpu
 const settingsPageButton = settingsPage.querySelector('.settings-page__button');
 const settingsPageSpeed = settingsPage.querySelector('#speed');
 
+const firstPage = document.querySelector('.first-page');
+const firstPageButton = firstPage.querySelector('.first-page__button');
+
+firstPageButton.addEventListener('click', () => {
+  firstPage.classList.remove('first-page_active');
+});
+
 const img = document.querySelector('.controls__arrow');
+
+const headImg = new Image();
+headImg.src = './images/snake-head.svg';
+const bodyImg = new Image();
+bodyImg.src = './images/snake-body.svg';
+
+function rotateHead(x, y, degrees) {
+  CTX.save();
+  // Перемещаем точку начала координат в центр изображения
+  CTX.translate(x + headImg.width / 2, y + headImg.height / 2);
+
+  // Поворачиваем контекст холста на заданный угол (в радианах)
+  CTX.rotate(degrees*Math.PI/180); // Поворот на 45 градусов (пример)
+
+  // Нарисуем изображение с учетом поворота
+  CTX.drawImage(headImg, -headImg.width / 2, -headImg.height / 2, headImg.width, headImg.height);
+
+  // Восстанавливаем предыдущее состояние контекста холста
+  CTX.restore();
+}
+
 
 let hexSnake = '';
 let speedSnake;
@@ -135,7 +165,8 @@ let dom_score = document.querySelector("#score");
 let dom_canvas = document.createElement("canvas");
 document.querySelector("#canvas").appendChild(dom_canvas);
 let CTX = dom_canvas.getContext("2d");
-
+CTX.imageSmoothingEnabled = true;
+CTX.imageSmoothingQuality = "high";
 const W = (dom_canvas.width = 300);
 const H = (dom_canvas.height = 300);
 
@@ -312,6 +343,10 @@ let KEY = {
         if (e.key === "ArrowDown" && this.ArrowUp) return;
         if (e.key === "ArrowLeft" && this.ArrowRight) return;
         if (e.key === "ArrowRight" && this.ArrowLeft) return;
+        if (e.key === "ArrowUp") currentDegree = 90;
+        if (e.key === "ArrowDown") currentDegree = -90;
+        if (e.key === "ArrowLeft") currentDegree = 0;
+        if (e.key === "ArrowRight") currentDegree = 180;
         this[e.key] = true;
         Object.keys(this)
           .filter((f) => f !== e.key && f !== "listen" && f !== "resetState")
@@ -323,7 +358,6 @@ let KEY = {
     );
   }
 };
-
 class Snake {
   constructor(i, type) {
     this.pos = new helpers.Vec(W / 2, H / 2);
@@ -338,17 +372,23 @@ class Snake {
   }
   draw() {
     let { x, y } = this.pos;
+    snakePos = {x: x, y: y};
     CTX.fillStyle = this.color;
     CTX.shadowBlur = 20;
-    // CTX.shadowColor = "rgba(255,255,255,.3 )";
-    CTX.fillRect(x, y, this.size, this.size);
-    CTX.shadowBlur = 0;
+    rotateHead(x, y, currentDegree);
+    // CTX.drawImage(headImg, x, y, this.size, this.size);
+
+    // CTX.fillRect(x, y, this.size, this.size);
+
+    // CTX.shadowBlur = 0;
     if (this.total >= 2) {
       for (let i = 0; i < this.history.length - 1; i++) {
         let { x, y } = this.history[i];
-        CTX.lineWidth = 1;
-        CTX.fillStyle = hexSnake ? hexSnake : "white";
-        CTX.fillRect(x, y, this.size, this.size);
+        // CTX.lineWidth = 1;
+        // CTX.fillStyle = hexSnake ? hexSnake : "white";
+        // CTX.fillRect(x, y, this.size, this.size);
+
+        CTX.drawImage(bodyImg, x, y, this.size, this.size);
       }
     }
   }
