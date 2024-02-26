@@ -9,12 +9,14 @@ const infoPageButton = infoPage.querySelector('.info-page__button');
 const infoPageText = infoPage.querySelector('.info-page__text');
 const controlsBlock = document.getElementById('controls');
 const infoPC = document.querySelector('.info-pc');
-const settingsButton = document.querySelector('.settings-btn');
 const settingsPage = document.querySelector('.settings-page');
 const settingsPageClose = settingsPage.querySelector('.settings-page__close');
 const settingsPageInput = settingsPage.querySelector('.settings-page__color-input');
 const settingsPageButton = settingsPage.querySelector('.settings-page__button');
 const settingsPageSpeed = settingsPage.querySelector('#speed');
+
+const endPage = document.querySelector('.end-page');
+const endPageButton = endPage.querySelector('.end-page__button');
 
 const firstPage = document.querySelector('.first-page');
 const firstPageButton = firstPage.querySelector('.first-page__button');
@@ -23,12 +25,26 @@ firstPageButton.addEventListener('click', () => {
   firstPage.classList.remove('first-page_active');
 });
 
-const img = document.querySelector('.controls__arrow');
+const img = document.querySelector('.arrow-btn');
 
 const headImg = new Image();
 headImg.src = './images/snake-head.svg';
 const bodyImg = new Image();
 bodyImg.src = './images/snake-body.svg';
+const foodImg1 = new Image();
+const foodImg2 = new Image();
+const foodImg3 = new Image();
+const foodImg4 = new Image();
+foodImg1.src = './images/snake-diamond1.svg';
+foodImg2.src = './images/snake-diamond2.svg';
+foodImg3.src = './images/snake-diamond3.svg';
+foodImg4.src = './images/snake-diamond4.svg';
+const ufoImg = new Image();
+ufoImg.src = './images/snake-ufo.svg';
+const monsterImg = new Image();
+monsterImg.src = './images/monster.svg';
+const blackHoleImg = new Image();
+blackHoleImg.src = './images/black-hole.svg';
 
 function rotateHead(x, y, degrees) {
   CTX.save();
@@ -127,10 +143,6 @@ settingsPageButton.addEventListener('click', () => {
   reset();
 });
 
-settingsButton.addEventListener('click', () => {
-  settingsPage.classList.add('settings-page_active');
-});
-
 settingsPageClose.addEventListener('click', () => {
   settingsPage.classList.remove('settings-page_active');
 })
@@ -220,21 +232,23 @@ let helpers = {
   },
   drawGrid() {
     CTX.lineWidth = 1.1;
-    CTX.strokeStyle = "#232332";
     CTX.shadowBlur = 0;
-    for (let i = 1; i < cells; i++) {
-      let f = (W / cells) * i;
-      CTX.beginPath();
-      CTX.moveTo(f, 0);
-      CTX.lineTo(f, H);
-      CTX.stroke();
-      CTX.beginPath();
-      CTX.moveTo(0, f);
-      CTX.lineTo(W, f);
-      CTX.stroke();
-      CTX.closePath();
+
+    for (let i = 0; i < cells; i++) {
+        for (let j = 0; j < cells; j++) {
+            // Вычисляем цвет ячейки в зависимости от чётности индексов i и j
+            let color = (i + j) % 2 === 0 ? "#1c0b5d" : "#251565";
+            CTX.fillStyle = color;
+            
+            // Рассчитываем координаты ячейки
+            let x = (W / cells) * i;
+            let y = (H / cells) * j;
+            
+            // Закрашиваем прямоугольник
+            CTX.fillRect(x, y, W / cells, H / cells);
+        }
     }
-  },
+},
   randHue() {
     return ~~(Math.random() * 360);
   },
@@ -292,7 +306,7 @@ let helpers = {
     return start * (1 - t) + end * t;
   }
 };
-
+let historyKey = [];
 let KEY = {
   ArrowUp: false,
   ArrowRight: false,
@@ -315,15 +329,19 @@ let KEY = {
         switch (e.target.id) {
           case "ArrowUp":
             this.ArrowUp = true;
+            currentDegree = 90;
             break;
           case "ArrowDown":
             this.ArrowDown = true;
+            currentDegree = -90;
             break;
           case "ArrowLeft":
             this.ArrowLeft = true;
+            currentDegree = 0;
             break;
           case "ArrowRight":
             this.ArrowRight = true;
+            currentDegree = 180;
             break;
           default:
             break;
@@ -336,7 +354,7 @@ let KEY = {
       },
       false
     );
-    addEventListener(
+    addEventListener(      
       "keydown",
       (e) => {
         if (e.key === "ArrowUp" && this.ArrowDown) return;
@@ -369,6 +387,7 @@ class Snake {
     this.color = hexSnake ? hexSnake : "white";
     this.history = [];
     this.total = 1;
+    this.stopArray = false;
   }
   draw() {
     let { x, y } = this.pos;
@@ -470,8 +489,9 @@ class Walls {
     if (buildWalls) {
       this.pos.forEach((elem) => {
         let {x, y} = elem;
-        CTX.fillStyle = "black";
-        CTX.fillRect(x, y, cellSize, cellSize);
+        // CTX.fillStyle = "black";
+        // CTX.fillRect(x, y, cellSize, cellSize);
+        CTX.drawImage(monsterImg, x, y, cellSize, cellSize);
       });
     }
   }
@@ -485,6 +505,24 @@ class Food {
     );
     this.color = currentHue = `hsl(${~~(Math.random() * 360)},100%,50%)`;
     this.size = cellSize;
+    this.foodImg = foodImg1;
+  }
+  getRandomImg() {
+    const min = Math.ceil(1);
+    const max = Math.floor(4);
+    const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    if (randomNum === 1) {
+      this.foodImg = foodImg1;
+    }
+    else if (randomNum === 2) {
+      this.foodImg = foodImg2;
+    }
+    else if (randomNum === 3) {
+      this.foodImg = foodImg3
+    }
+    else {
+      this.foodImg = foodImg4
+    }
   }
   draw() {
     let { x, y } = this.pos;
@@ -492,14 +530,14 @@ class Food {
     CTX.shadowBlur = 20;
     CTX.shadowColor = this.color;
     CTX.fillStyle = this.color;
-    if (score === 1) {
-      CTX.drawImage(img, x, y, this.size, this.size);
+    if (score === 3) {
+      CTX.drawImage(ufoImg, x, y, this.size, this.size);
     }
-    else if (score === 4) {
-      CTX.drawImage(img, x, y, this.size, this.size);
+    else if (score === 6) {
+      CTX.drawImage(blackHoleImg, x, y, this.size, this.size);
     }
     else {
-      CTX.fillRect(x, y, this.size, this.size);
+      CTX.drawImage(this.foodImg, x, y, this.size, this.size);
     }
     CTX.globalCompositeOperation = "source-over";
     CTX.shadowBlur = 0;
@@ -576,16 +614,24 @@ class Particle {
 
 function incrementScore() {
   score++;
+  food.getRandomImg();
   dom_score.innerText = score.toString().padStart(2, "0");
-  if (score === 2) {
+  if (score === 4) {
     buildWalls = true;
     pause();
     infoPage.classList.add('info-page_active');
+    infoPageText.textContent = 'Ты разбил летающую тарелку';
+    infoPage.querySelector('.info-page__subtext').textContent = 'Внимание, капитан! Избегай монстров, которых разбросало по всему космосу';
+    infoPage.querySelector('.info-page__img').src = './images/info-ufo.svg';
+    infoPage.querySelector('.info-page__img').style.top = '-88px';
   }
-  if (score === 5) {
+  if (score === 7) {
     buildWalls = false;
     pause();
-    infoPageText.textContent = 'Поздравляем, ты снова собрал стрелочку! Теперь кайфуй без препятствий.';
+    infoPageText.textContent = 'Всех монстров засосало';
+    infoPage.querySelector('.info-page__subtext').textContent = 'Инопланетных монстров засосало в черную дыру, продолжаем полет!';
+    infoPage.querySelector('.info-page__img').src = './images/info-hole.svg';
+    infoPage.querySelector('.info-page__img').style.top = '-77px';
     infoPage.classList.add('info-page_active');
   }
 }
@@ -641,21 +687,18 @@ function continiue() {
 }
 
 function gameOver() {
-  infoPageText.textContent = 'Ты поймал волшебную стрелку! Теперь появились чёрные препятствия, избегай их.';
   maxScore ? null : (maxScore = score);
   score > maxScore ? (maxScore = score) : null;
   window.localStorage.setItem("maxScore", maxScore);
-  CTX.fillStyle = "#4cffd7";
-  CTX.textAlign = "center";
-  CTX.font = "bold 30px Poppins, sans-serif";
-  CTX.fillText("GAME OVER", W / 2, H / 2);
-  CTX.font = "15px Poppins, sans-serif";
-  CTX.fillText(`SCORE   ${score}`, W / 2, H / 2 + 60);
-  CTX.fillText(`MAXSCORE   ${maxScore}`, W / 2, H / 2 + 80);
+  endPage.classList.add('end-page_active');
+  endPage.querySelector('.end-page__score-count').textContent = score;
+  endPage.querySelector('.end-page__score-count_best').textContent = maxScore;
 }
 
+endPageButton.addEventListener("click", reset, false);
+
 function reset() {
-  infoPageText.textContent = 'Ты поймал волшебную стрелку! Теперь появились чёрные препятствия, избегай их.';
+  endPage.classList.remove('end-page_active');
   dom_score.innerText = "00";
   score = "00";
   snake = new Snake();

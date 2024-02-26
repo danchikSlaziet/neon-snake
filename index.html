@@ -27,12 +27,45 @@
         </button>
       </div>
     </div>
+    <div class="end-page">
+      <div class="end-page__content">
+        <img class="end-page__img" src="./images/end-page-ship.svg" alt="">
+        <p class="end-page__text">
+          Корабль разрушен
+        </p>
+        <div class="end-page__score-block">
+          <div class="end-page__score">
+            <p class="end-page__score-text">
+              Счёт
+            </p>
+            <p class="end-page__score-count">
+
+            </p>
+          </div>
+          <div class="end-page__score end-page__score_best">
+            <p class="end-page__score-text">
+              Лучший счёт
+            </p>
+            <p class="end-page__score-count end-page__score-count_best">
+              
+            </p>
+          </div>
+        </div>
+        <button class="end-page__button" type="button">Заново</button>
+      </div>
+    </div>
     <div class="info-page">
       <div class="info-page__content">
+        <img class="info-page__img" src="./images/info-ufo.svg" alt="">
         <p class="info-page__text">
-          Ты поймал волшебную стрелку! Теперь появились чёрные препятствия, избегай их.
+          Ты разбил<br>летающую тарелку
         </p>
-        <button class="info-page__button" type="button">ПОНЯТНО</button>
+        <p class="info-page__subtext">
+          Внимание, капитан!
+          Избегай монстров, которых
+          разбросало по&nbsp;всему космосу
+        </p>
+        <button class="info-page__button" type="button">Принято!</button>
       </div>
     </div>
     <div class="settings-page">
@@ -59,15 +92,17 @@
     <div class="wrapper">
       <div class="wrapper__buttons">
         <button id="replay">
-          <i class="fas fa-play"></i>
-          ЗАНОВО
-        </button>
-        <button class="settings-btn" type="button">
-          <img class="settings-btn__image" src="./images/settings.svg" alt="">
+          <img src="./images/restart-img.svg" alt="">
         </button>
       </div>
+      <div class="bg-score">
+        <p class="bg-score__amount">
+          14761
+        </p>
+        <img class="bg-score__coin" src="./images/bg-score-coin.svg" alt="">
+      </div>
       <div id="canvas">
-  
+        <div class="canvas-border"></div>
       </div>
       <div id="ui">
         <h2>
@@ -79,16 +114,10 @@
         <p class="info-pc__text">Чтобы начать игру, нажмите одну из клавишей  ←&nbsp;&nbsp;&nbsp;→&nbsp;&nbsp;&nbsp;↑&nbsp;&nbsp;&nbsp;↓.</p>
       </div>
       <div id="controls">
-        <div class="top-control">
-          <img class="controls__arrow" id="ArrowUp" src="./images/arrow-button.png" alt="">
-        </div>
-        <div class="left-right-controls">
-          <img class="controls__arrow" id="ArrowLeft" src="./images/arrow-button.png" alt="">
-          <img class="controls__arrow" id="ArrowRight" src="./images/arrow-button.png" alt="">
-        </div>
-        <div class="bottom-control">
-          <img class="controls__arrow" id="ArrowDown" src="./images/arrow-button.png" alt="">
-        </div>
+        <img class="arrow-btn" id="ArrowLeft" src="./images/arrow-left.svg" alt="">
+        <img class="arrow-btn" id="ArrowRight" src="./images/arrow-right.svg" alt="">
+        <img class="arrow-btn" id="ArrowUp" src="./images/arrow-up.svg" alt="">
+        <img class="arrow-btn" id="ArrowDown" src="./images/arrow-bottom.svg" alt="">
       </div>
     </div>
   </div>
