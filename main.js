@@ -260,7 +260,6 @@ let KEY = {
   },
   listenMobile() {
     if (detect.os() == null) {
-      let directionName;
       // addEventListener(
       //   "keydown",
       //   (e) => {
@@ -296,6 +295,7 @@ let KEY = {
       //   },
       //   false
       // );
+        let directionName;
       addEventListener(      
         "keydown",
         (e) => {
@@ -325,7 +325,7 @@ let KEY = {
           } 
           this[e.key] = true;
           Object.keys(this)
-            .filter((f) => (f !== e.key && f !== directionName) && f !== "listen" && f !== "resetState")
+            .filter((f) => f !== e.key && f !== directionName && f !== "listenMobile" && f !== "resetState")
             .forEach((k) => {
               this[k] = false;
             });
@@ -404,10 +404,13 @@ class Snake {
         // CTX.lineWidth = 1;
         // CTX.fillStyle = hexSnake ? hexSnake : "white";
         // CTX.fillRect(x, y, this.size, this.size);
-
-        // CTX.drawImage(bodyImg, x, y, 15, 15);
-        CTX.fillStyle = CTX.createPattern(bodyImg, 'repeat');
-        CTX.fillRect(x, y, 15, 15);
+        if (detect.os() === 'iOS') {
+          CTX.fillStyle = CTX.createPattern(bodyImg, 'repeat');
+          CTX.fillRect(x, y, 15, 15);
+        }
+        else {
+          CTX.drawImage(bodyImg, x, y, 15, 15);
+        }
       }
     }
   }
@@ -491,9 +494,13 @@ class Walls {
         let {x, y} = elem;
         // CTX.fillStyle = "black";
         // CTX.fillRect(x, y, cellSize, cellSize);
-        CTX.fillStyle = CTX.createPattern(monsterImg, 'repeat');
-        CTX.fillRect(x, y, cellSize, cellSize);
-        // CTX.drawImage(monsterImg, x, y, cellSize, cellSize);
+        if (detect.os() === 'iOS') {
+          CTX.fillStyle = CTX.createPattern(monsterImg, 'repeat');
+          CTX.fillRect(x, y, cellSize, cellSize);
+        }
+        else {
+          CTX.drawImage(monsterImg, x, y, cellSize, cellSize);
+        }
       });
     }
   }
@@ -533,19 +540,31 @@ class Food {
     CTX.shadowColor = this.color;
     CTX.fillStyle = this.color;
     if (score === 3) {
-      CTX.fillStyle = CTX.createPattern(ufoImg, 'repeat');
-      CTX.fillRect(x, y, this.size, this.size);
-      // CTX.drawImage(ufoImg, x, y, this.size, this.size);
+      if (detect.os() === 'iOS') {
+        CTX.fillStyle = CTX.createPattern(ufoImg, 'repeat');
+        CTX.fillRect(x, y, this.size, this.size);
+      }
+      else {
+        CTX.drawImage(ufoImg, x, y, this.size, this.size);
+      }
     }
     else if (score === 6) {
-      CTX.fillStyle = CTX.createPattern(blackHoleImg, 'repeat');
-      CTX.fillRect(x, y, this.size, this.size);
-      // CTX.drawImage(blackHoleImg, x, y, this.size, this.size);
+      if (detect.os() === 'iOS') {
+        CTX.fillStyle = CTX.createPattern(blackHoleImg, 'repeat');
+        CTX.fillRect(x, y, this.size, this.size);
+      }
+      else {
+        CTX.drawImage(blackHoleImg, x, y, this.size, this.size);
+      }
     }
     else {
-      CTX.fillStyle = CTX.createPattern(this.foodImg, 'repeat');
-      CTX.fillRect(x, y, this.size, this.size);
-      // CTX.drawImage(this.foodImg, x, y, this.size, this.size);
+      if (detect.os() === 'iOS') {
+        CTX.fillStyle = CTX.createPattern(this.foodImg, 'repeat');
+        CTX.fillRect(x, y, this.size, this.size);
+      }
+      else {
+        CTX.drawImage(this.foodImg, x, y, this.size, this.size);
+      }
       // CTX.fillRect(x, y, this.size, this.size);
     }
     CTX.globalCompositeOperation = "source-over";
