@@ -29,6 +29,8 @@ const img = document.querySelector('.arrow-btn');
 
 const headImg = new Image();
 headImg.src = './images/snake-head.svg';
+const testImg = new Image();
+testImg.src = './images/snake-head.png';
 const bodyImg = new Image();
 bodyImg.src = './images/snake-body.svg';
 const foodImg1 = new Image();
@@ -53,7 +55,6 @@ function rotateHead(x, y, degrees) {
 
   // Поворачиваем контекст холста на заданный угол (в радианах)
   CTX.rotate(degrees*Math.PI/180); // Поворот на 45 градусов (пример)
-
   // Нарисуем изображение с учетом поворота
   CTX.drawImage(headImg, -headImg.width / 2, -headImg.height / 2, headImg.width, headImg.height);
 
@@ -177,8 +178,6 @@ let dom_score = document.querySelector("#score");
 let dom_canvas = document.createElement("canvas");
 document.querySelector("#canvas").appendChild(dom_canvas);
 let CTX = dom_canvas.getContext("2d");
-CTX.imageSmoothingEnabled = true;
-CTX.imageSmoothingQuality = "high";
 const W = (dom_canvas.width = 300);
 const H = (dom_canvas.height = 300);
 
@@ -376,6 +375,7 @@ let KEY = {
     );
   }
 };
+
 class Snake {
   constructor(i, type) {
     this.pos = new helpers.Vec(W / 2, H / 2);
@@ -407,7 +407,9 @@ class Snake {
         // CTX.fillStyle = hexSnake ? hexSnake : "white";
         // CTX.fillRect(x, y, this.size, this.size);
 
-        CTX.drawImage(bodyImg, x, y, this.size, this.size);
+        // CTX.drawImage(bodyImg, x, y, 15, 15);
+        CTX.fillStyle = CTX.createPattern(bodyImg, 'repeat');
+        CTX.fillRect(x, y, 15, 15);
       }
     }
   }
@@ -538,6 +540,7 @@ class Food {
     }
     else {
       CTX.drawImage(this.foodImg, x, y, this.size, this.size);
+      // CTX.fillRect(x, y, this.size, this.size);
     }
     CTX.globalCompositeOperation = "source-over";
     CTX.shadowBlur = 0;
@@ -663,7 +666,8 @@ function initialize() {
 function loop() {
   clear();
   if (!isGameOver) {
-    requestID = setTimeout(loop, 1000 / 60);
+    // requestID = setTimeout(loop, 1000 / 60);
+    requestID = requestAnimationFrame(loop)
     helpers.drawGrid();
     snake.update();
     food.draw();
@@ -679,11 +683,13 @@ function loop() {
 }
 
 function pause() {
-  clearTimeout(requestID);
+  // clearTimeout(requestID);
+  cancelAnimationFrame(requestID)
 }
 
 function continiue() {
-  requestID = setTimeout(loop, 1000 / 60);
+  // requestID = setTimeout(loop, 1000 / 60);
+  requestID = requestAnimationFrame(loop)
 }
 
 function gameOver() {
@@ -706,7 +712,9 @@ function reset() {
   food.spawn();
   KEY.resetState();
   isGameOver = false;
-  clearTimeout(requestID);
+  // clearTimeout(requestID);
+  cancelAnimationFrame(requestID);
+  requestID = null;
   loop();
 }
 

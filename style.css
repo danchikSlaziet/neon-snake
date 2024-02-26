@@ -744,6 +744,9 @@ border-top: 14px solid #6e7888;
   transition: opacity .24s linear;
   background: linear-gradient(92.28deg, #5D36FF 2.57%, #BF07FF 109.75%), linear-gradient(0deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15));
 }
+.first-page__button:hover {
+  cursor: pointer;
+}
 
 @keyframes do-levitation-y {
     0% {
