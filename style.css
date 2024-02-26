@@ -33,6 +33,7 @@ body {
   justify-content: center;
   align-items: center;
   color: #6e7888;
+  overflow: hidden;
 }
 canvas {
   background-color: #181825;
