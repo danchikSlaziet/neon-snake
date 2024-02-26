@@ -412,8 +412,113 @@ h2 {
   opacity: 0.7;
 }
 
-.info-pc__text {
+
+.info-page-2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.5);
+  visibility: hidden;
+  opacity: 0;
+  z-index: 10;
+  transition: visibility .24s, opacity .24s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-page-2_active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.info-page-2__content {
+  position: relative;
+  background: #150C3A;
+  box-sizing: border-box;
+  padding: 86px 16px 18px 16px;
+  width: 70vw;
+  /* min-height: 50vh; */
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  border: 1px solid #281A63;
+  box-shadow: 0px 4px 57.20000076293945px 0px #00000063;
+}
+
+.info-page-2__img {
+  position: absolute;
+  top: -77px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.info-page-2__text {
   text-align: center;
+  font-family: "TT";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+  letter-spacing: 0em;
+  margin-bottom: 9px;
+  color: #FFF;
+  z-index: 10;
+}
+
+.info-page-2__subtext {
+  color: #8575C3;
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  margin-bottom: 23px;
+}
+
+.info-page-2__button {
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #FFF;
+  border: none;
+  outline: none;
+  padding: 18px 7px;
+  border: 1px solid #FFFFFF21;
+  background: #FFFFFF26;
+  border-radius: 18px;
+  text-transform: uppercase;
+  width: 100%;
+  transition: opacity .24s linear;
+}
+
+.info-page-2__button:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+.info-pc {
+  margin-top: 25px;
+}
+.info-pc__text {
+  color: #FFF;
+  font-family: "TT";
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.info-pc__image {
+  width: 292px;
+  display: block;
+  margin: 0 auto;
 }
 
 .settings-btn {

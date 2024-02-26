@@ -15,6 +15,9 @@ const settingsPageInput = settingsPage.querySelector('.settings-page__color-inpu
 const settingsPageButton = settingsPage.querySelector('.settings-page__button');
 const settingsPageSpeed = settingsPage.querySelector('#speed');
 
+const infoPage2 = document.querySelector('.info-page-2');
+const infoPage2Button = infoPage2.querySelector('.info-page-2__button');
+
 const endPage = document.querySelector('.end-page');
 const endPageButton = endPage.querySelector('.end-page__button');
 
@@ -29,8 +32,6 @@ const img = document.querySelector('.arrow-btn');
 
 const headImg = new Image();
 headImg.src = './images/snake-head.svg';
-const testImg = new Image();
-testImg.src = './images/snake-head.png';
 const bodyImg = new Image();
 bodyImg.src = './images/snake-body.svg';
 const foodImg1 = new Image();
@@ -67,69 +68,6 @@ let hexSnake = '';
 let speedSnake;
 let buildWalls = false;
 
-$('.select').each(function(){
-  // Variables
-  var $this = $(this),
-    selectOption = $this.find('option'),
-    selectOptionLength = selectOption.length,
-    selectedOption = selectOption.filter(':selected'),
-    dur = 500;
-
-  $this.hide();
-  // Wrap all in select box
-  $this.wrap('<div class="select"></div>');
-  // Style box
-  $('<div>',{
-    class: 'select__gap',
-    text: 'Выбрать из списка'
-  }).insertAfter($this);
-  
-  var selectGap = $this.next('.select__gap'),
-    caret = selectGap.find('.caret');
-  // Add ul list
-  $('<ul>',{
-    class: 'select__list'
-  }).insertAfter(selectGap);		
-
-  var selectList = selectGap.next('.select__list');
-  // Add li - option items
-  for(var i = 0; i < selectOptionLength; i++){
-    $('<li>',{
-      class: 'select__item',
-      html: $('<span>',{
-        text: selectOption.eq(i).text()
-      })				
-    })
-    .attr('data-value', selectOption.eq(i).val())
-    .appendTo(selectList);
-  }
-  // Find all items
-  var selectItem = selectList.find('li');
-
-  selectList.slideUp(0);
-  selectGap.on('click', function(){
-    if(!$(this).hasClass('on')){
-      $(this).addClass('on');
-      selectList.slideDown(dur);
-
-      selectItem.on('click', function(){
-        var chooseItem = $(this).data('value');
-
-        $('select').val(chooseItem).attr('selected', 'selected');
-        selectGap.text($(this).find('span').text());
-
-        selectList.slideUp(dur);
-        selectGap.removeClass('on');
-      });
-      
-    } else {
-      $(this).removeClass('on');
-      selectList.slideUp(dur);
-    }
-  });		
-
-});
-
 settingsPageButton.addEventListener('click', () => {
   hexSnake = settingsPageInput.value.trim();
   if (settingsPageSpeed.value === 'low') {
@@ -152,7 +90,10 @@ infoPageButton.addEventListener('click', () => {
   infoPage.classList.remove('info-page_active');
   setTimeout(() => {  continiue();}, 400)
 });
-
+infoPage2Button.addEventListener('click', () => {
+  infoPage2.classList.remove('info-page-2_active');
+  setTimeout(() => {  continiue();}, 400)
+})
 // document.addEventListener('click', (evt) => {
 //   console.log(evt.currentTarget)
 //   if (evt.target.className.includes('info-page_active')) {
@@ -318,61 +259,118 @@ let KEY = {
     this.ArrowLeft = false;
   },
   listenMobile() {
-    addEventListener(
-      "touchstart",
-      (e) => {
-        if (e.target.id === "ArrowUp" && this.ArrowDown) {console.log(1);return};
-        if (e.target.id === "ArrowDown" && this.ArrowUp) return;
-        if (e.target.id === "ArrowLeft" && this.ArrowRight) return;
-        if (e.target.id === "ArrowRight" && this.ArrowLeft) return;
-        switch (e.target.id) {
-          case "ArrowUp":
+    if (detect.os() == null) {
+      let directionName;
+      // addEventListener(
+      //   "keydown",
+      //   (e) => {
+      //     if (e.key === "w" && this.ArrowDown) return;
+      //     if (e.key === "s" && this.ArrowUp) return;
+      //     if (e.key === "a" && this.ArrowRight) return;
+      //     if (e.key === "d" && this.ArrowLeft) return;
+      //     switch (e.key) {
+      //       case "w":
+      //         this.ArrowUp = true;
+      //         directionName = 'ArrowUp';
+      //         break;
+      //       case "s":
+      //         this.ArrowDown = true;
+      //         directionName = 'ArrowDown';
+      //         break;
+      //       case "a":
+      //         this.ArrowLeft = true;
+      //         directionName = 'ArrowLeft';
+      //         break;
+      //       case "d":
+      //         this.ArrowRight = true;
+      //         directionName = 'ArrowRight';
+      //         break;
+      //       default:
+      //         break;
+      //     }
+      //     Object.keys(this)
+      //       .filter((f) => f !== directionName && f !== "listenMobile" && f !== "resetState")
+      //       .forEach((k) => {
+      //         this[k] = false;
+      //       });
+      //   },
+      //   false
+      // );
+      addEventListener(      
+        "keydown",
+        (e) => {
+          if ((e.key === "ArrowUp" || e.key === "w") && this.ArrowDown) return;
+          if ((e.key === "ArrowDown" || e.key === "s") && this.ArrowUp) return;
+          if ((e.key === "ArrowLeft" || e.key === "a") && this.ArrowRight) return;
+          if ((e.key === "ArrowRight" || e.key === "d") && this.ArrowLeft) return;
+          if (e.key === "ArrowUp" || e.key === "w") {
             this.ArrowUp = true;
             currentDegree = 90;
-            break;
-          case "ArrowDown":
+            directionName = 'ArrowUp';
+          }
+          if (e.key === "ArrowDown" || e.key === "s") {
             this.ArrowDown = true;
             currentDegree = -90;
-            break;
-          case "ArrowLeft":
+            directionName = 'ArrowDown';
+          } 
+          if (e.key === "ArrowLeft" || e.key === "a") {
             this.ArrowLeft = true;
             currentDegree = 0;
-            break;
-          case "ArrowRight":
+            directionName = 'ArrowLeft';
+          } 
+          if (e.key === "ArrowRight" || e.key === "d") {
             this.ArrowRight = true;
             currentDegree = 180;
-            break;
-          default:
-            break;
-        }
-        Object.keys(this)
-          .filter((f) => f !== e.target.id && f !== "listenMobile" && f !== "resetState")
-          .forEach((k) => {
-            this[k] = false;
-          });
-      },
-      false
-    );
-    addEventListener(      
-      "keydown",
-      (e) => {
-        if (e.key === "ArrowUp" && this.ArrowDown) return;
-        if (e.key === "ArrowDown" && this.ArrowUp) return;
-        if (e.key === "ArrowLeft" && this.ArrowRight) return;
-        if (e.key === "ArrowRight" && this.ArrowLeft) return;
-        if (e.key === "ArrowUp") currentDegree = 90;
-        if (e.key === "ArrowDown") currentDegree = -90;
-        if (e.key === "ArrowLeft") currentDegree = 0;
-        if (e.key === "ArrowRight") currentDegree = 180;
-        this[e.key] = true;
-        Object.keys(this)
-          .filter((f) => f !== e.key && f !== "listen" && f !== "resetState")
-          .forEach((k) => {
-            this[k] = false;
-          });
-      },
-      false
-    );
+            directionName = 'ArrowRight';
+          } 
+          this[e.key] = true;
+          Object.keys(this)
+            .filter((f) => (f !== e.key && f !== directionName) && f !== "listen" && f !== "resetState")
+            .forEach((k) => {
+              this[k] = false;
+            });
+        },
+        false
+      );
+      
+    }
+    else {
+      addEventListener(
+        "touchstart",
+        (e) => {
+          if (e.target.id === "ArrowUp" && this.ArrowDown) {console.log(1);return};
+          if (e.target.id === "ArrowDown" && this.ArrowUp) return;
+          if (e.target.id === "ArrowLeft" && this.ArrowRight) return;
+          if (e.target.id === "ArrowRight" && this.ArrowLeft) return;
+          switch (e.target.id) {
+            case "ArrowUp":
+              this.ArrowUp = true;
+              currentDegree = 90;
+              break;
+            case "ArrowDown":
+              this.ArrowDown = true;
+              currentDegree = -90;
+              break;
+            case "ArrowLeft":
+              this.ArrowLeft = true;
+              currentDegree = 0;
+              break;
+            case "ArrowRight":
+              this.ArrowRight = true;
+              currentDegree = 180;
+              break;
+            default:
+              break;
+          }
+          Object.keys(this)
+            .filter((f) => f !== e.target.id && f !== "listenMobile" && f !== "resetState")
+            .forEach((k) => {
+              this[k] = false;
+            });
+        },
+        false
+      );
+    }
   }
 };
 
@@ -493,7 +491,9 @@ class Walls {
         let {x, y} = elem;
         // CTX.fillStyle = "black";
         // CTX.fillRect(x, y, cellSize, cellSize);
-        CTX.drawImage(monsterImg, x, y, cellSize, cellSize);
+        CTX.fillStyle = CTX.createPattern(monsterImg, 'repeat');
+        CTX.fillRect(x, y, cellSize, cellSize);
+        // CTX.drawImage(monsterImg, x, y, cellSize, cellSize);
       });
     }
   }
@@ -533,13 +533,19 @@ class Food {
     CTX.shadowColor = this.color;
     CTX.fillStyle = this.color;
     if (score === 3) {
-      CTX.drawImage(ufoImg, x, y, this.size, this.size);
+      CTX.fillStyle = CTX.createPattern(ufoImg, 'repeat');
+      CTX.fillRect(x, y, this.size, this.size);
+      // CTX.drawImage(ufoImg, x, y, this.size, this.size);
     }
     else if (score === 6) {
-      CTX.drawImage(blackHoleImg, x, y, this.size, this.size);
+      CTX.fillStyle = CTX.createPattern(blackHoleImg, 'repeat');
+      CTX.fillRect(x, y, this.size, this.size);
+      // CTX.drawImage(blackHoleImg, x, y, this.size, this.size);
     }
     else {
-      CTX.drawImage(this.foodImg, x, y, this.size, this.size);
+      CTX.fillStyle = CTX.createPattern(this.foodImg, 'repeat');
+      CTX.fillRect(x, y, this.size, this.size);
+      // CTX.drawImage(this.foodImg, x, y, this.size, this.size);
       // CTX.fillRect(x, y, this.size, this.size);
     }
     CTX.globalCompositeOperation = "source-over";
@@ -623,19 +629,11 @@ function incrementScore() {
     buildWalls = true;
     pause();
     infoPage.classList.add('info-page_active');
-    infoPageText.textContent = 'Ты разбил летающую тарелку';
-    infoPage.querySelector('.info-page__subtext').textContent = 'Внимание, капитан! Избегай монстров, которых разбросало по всему космосу';
-    infoPage.querySelector('.info-page__img').src = './images/info-ufo.svg';
-    infoPage.querySelector('.info-page__img').style.top = '-88px';
   }
   if (score === 7) {
     buildWalls = false;
     pause();
-    infoPageText.textContent = 'Всех монстров засосало';
-    infoPage.querySelector('.info-page__subtext').textContent = 'Инопланетных монстров засосало в черную дыру, продолжаем полет!';
-    infoPage.querySelector('.info-page__img').src = './images/info-hole.svg';
-    infoPage.querySelector('.info-page__img').style.top = '-77px';
-    infoPage.classList.add('info-page_active');
+    infoPage2.classList.add('info-page-2_active');
   }
 }
 
