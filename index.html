@@ -9,6 +9,12 @@
 <body>
   <div class="container noselect">
     <img class="exit-button" src="./images/exit-arrow.svg" alt="">
+    <div class="clouds">
+      <img class="clouds__cloud clouds__cloud_top" src="./images/top-oblako.svg" alt="">
+      <img class="clouds__cloud  clouds__cloud_middle" src="./images/middle-oblako.svg" alt="">
+      <img class="clouds__cloud clouds__cloud_bottom" src="./images/bottom-oblako.svg" alt="">
+    </div>
+    <img class="main-moon" src="./images/main-moon.svg" alt="">
     <div class="first-page first-page_active">
       <img class="first-page__moon" src="./images/first-page-moon.svg" alt="">
       <div class="first-page__rocket-help">
@@ -115,6 +121,9 @@
       </div>
       <div id="canvas">
         <div class="canvas-border"></div>
+        <canvas id="snakeCanvas"></canvas>
+        <canvas id="foodCanvas"></canvas>
+        <canvas id="wallCanvas"></canvas>
       </div>
       <div id="ui">
         <h2>

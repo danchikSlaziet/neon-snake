@@ -50,37 +50,30 @@ const blackHoleImg = new Image();
 blackHoleImg.src = './images/black-hole.svg';
 
 function rotateHead(x, y, degrees) {
-  CTX.save();
+  snakeCTX.save();
   // Перемещаем точку начала координат в центр изображения
-  CTX.translate(x + headImg.width / 2, y + headImg.height / 2);
+  snakeCTX.translate(x + headImg.width / 2, y + headImg.height / 2);
 
   // Поворачиваем контекст холста на заданный угол (в радианах)
-  CTX.rotate(degrees*Math.PI/180); // Поворот на 45 градусов (пример)
+  snakeCTX.rotate(degrees*Math.PI/180); // Поворот на 45 градусов (пример)
   // Нарисуем изображение с учетом поворота
-  CTX.drawImage(headImg, -headImg.width / 2, -headImg.height / 2, headImg.width, headImg.height);
+  snakeCTX.drawImage(headImg, -headImg.width / 2, -headImg.height / 2, 15, 15);
 
   // Восстанавливаем предыдущее состояние контекста холста
-  CTX.restore();
+  snakeCTX.restore();
+}
+function drawImage(src, x, y, width, height) {
+  const image = new Image();
+  image.onload = function() {
+    CTX.drawImage(image, x, y, width, height);
+  }
+  image.src = src;
 }
 
 
 let hexSnake = '';
 let speedSnake;
 let buildWalls = false;
-
-settingsPageButton.addEventListener('click', () => {
-  hexSnake = settingsPageInput.value.trim();
-  if (settingsPageSpeed.value === 'low') {
-    speedSnake = 15;
-  }
-  if (settingsPageSpeed.value === 'medium') {
-    speedSnake = 5;
-  }
-  if (settingsPageSpeed.value === 'high') {
-    speedSnake = 1;
-  }
-  reset();
-});
 
 settingsPageClose.addEventListener('click', () => {
   settingsPage.classList.remove('settings-page_active');
@@ -94,13 +87,6 @@ infoPage2Button.addEventListener('click', () => {
   infoPage2.classList.remove('info-page-2_active');
   setTimeout(() => {  continiue();}, 400)
 })
-// document.addEventListener('click', (evt) => {
-//   console.log(evt.currentTarget)
-//   if (evt.target.className.includes('info-page_active')) {
-//     infoPage.classList.remove('info-page_active');
-//     continiue();
-//   }
-// });
 
 let detect = new MobileDetect(window.navigator.userAgent);
 
@@ -121,6 +107,46 @@ document.querySelector("#canvas").appendChild(dom_canvas);
 let CTX = dom_canvas.getContext("2d");
 const W = (dom_canvas.width = 300);
 const H = (dom_canvas.height = 300);
+
+
+const snakeCanvas = document.getElementById('snakeCanvas');
+const snakeCTX = snakeCanvas.getContext('2d');
+const originalWidth = 300; // Исходная ширина холста
+const originalHeight = 300; // Исходная высота холста
+const scaleFactor = 2; // Масштабный коэффициент
+snakeCanvas.width = originalWidth * scaleFactor; // Увеличенная ширина
+snakeCanvas.height = originalHeight * scaleFactor; // Увеличенная высота
+// Установка размеров холста через CSS для сжатия
+snakeCanvas.style.width = originalWidth + 4.8 + 'px'; // Исходная ширина
+snakeCanvas.style.height = originalHeight + 4.8 + 'px'; // Исходная высота
+// Рисование на увеличенном холсте
+snakeCTX.scale(scaleFactor, scaleFactor);
+
+const foodCanvas = document.getElementById('foodCanvas');
+const foodCTX = foodCanvas.getContext('2d');
+const originalWidthF = 300; // Исходная ширина холста
+const originalHeightF = 300; // Исходная высота холста
+const scaleFactorF = 2; // Масштабный коэффициент
+foodCanvas.width = originalWidthF * scaleFactorF; // Увеличенная ширина
+foodCanvas.height = originalHeightF * scaleFactorF; // Увеличенная высота
+// Установка размеров холста через CSS для сжатия
+foodCanvas.style.width = originalWidthF + 4.8 + 'px'; // Исходная ширина
+foodCanvas.style.height = originalHeightF + 4.8 + 'px'; // Исходная высота
+// Рисование на увеличенном холсте
+foodCTX.scale(scaleFactorF, scaleFactorF);
+
+const wallCanvas = document.getElementById('wallCanvas');
+const wallCTX = wallCanvas.getContext('2d');
+const originalWidthW = 300; // Исходная ширина холста
+const originalHeightW = 300; // Исходная высота холста
+const scaleFactorW = 2; // Масштабный коэффициент
+wallCanvas.width = originalWidthF * scaleFactorF; // Увеличенная ширина
+wallCanvas.height = originalHeightF * scaleFactorF; // Увеличенная высота
+// Установка размеров холста через CSS для сжатия
+wallCanvas.style.width = originalWidthW + 4.8 + 'px'; // Исходная ширина
+wallCanvas.style.height = originalHeightW + 4.8 + 'px'; // Исходная высота
+// Рисование на увеличенном холсте
+wallCTX.scale(scaleFactorW, scaleFactorW);
 
 let snake,
   food,
@@ -260,41 +286,6 @@ let KEY = {
   },
   listenMobile() {
     if (detect.os() == null) {
-      // addEventListener(
-      //   "keydown",
-      //   (e) => {
-      //     if (e.key === "w" && this.ArrowDown) return;
-      //     if (e.key === "s" && this.ArrowUp) return;
-      //     if (e.key === "a" && this.ArrowRight) return;
-      //     if (e.key === "d" && this.ArrowLeft) return;
-      //     switch (e.key) {
-      //       case "w":
-      //         this.ArrowUp = true;
-      //         directionName = 'ArrowUp';
-      //         break;
-      //       case "s":
-      //         this.ArrowDown = true;
-      //         directionName = 'ArrowDown';
-      //         break;
-      //       case "a":
-      //         this.ArrowLeft = true;
-      //         directionName = 'ArrowLeft';
-      //         break;
-      //       case "d":
-      //         this.ArrowRight = true;
-      //         directionName = 'ArrowRight';
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //     Object.keys(this)
-      //       .filter((f) => f !== directionName && f !== "listenMobile" && f !== "resetState")
-      //       .forEach((k) => {
-      //         this[k] = false;
-      //       });
-      //   },
-      //   false
-      // );
         let directionName;
       addEventListener(      
         "keydown",
@@ -382,35 +373,22 @@ class Snake {
     this.index = i;
     this.delay = speedSnake ? speedSnake : 5;
     this.size = W / cells;
-    this.color = hexSnake ? hexSnake : "white";
+    this.color = currentHue = `hsl(${helpers.randHue()}, 100%, 50%)`;
     this.history = [];
     this.total = 1;
     this.stopArray = false;
   }
   draw() {
+    snakeCTX.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
     let { x, y } = this.pos;
     snakePos = {x: x, y: y};
-    CTX.fillStyle = this.color;
-    CTX.shadowBlur = 20;
+    // snakeCTX.fillStyle = this.color;
+    // snakeCTX.shadowBlur = 20;
     rotateHead(x, y, currentDegree);
-    // CTX.drawImage(headImg, x, y, this.size, this.size);
-
-    // CTX.fillRect(x, y, this.size, this.size);
-
-    // CTX.shadowBlur = 0;
     if (this.total >= 2) {
       for (let i = 0; i < this.history.length - 1; i++) {
         let { x, y } = this.history[i];
-        // CTX.lineWidth = 1;
-        // CTX.fillStyle = hexSnake ? hexSnake : "white";
-        // CTX.fillRect(x, y, this.size, this.size);
-        if (detect.os() === 'iOS') {
-          CTX.fillStyle = CTX.createPattern(bodyImg, 'repeat');
-          CTX.fillRect(x, y, 15, 15);
-        }
-        else {
-          CTX.drawImage(bodyImg, x, y, 15, 15);
-        }
+        snakeCTX.drawImage(bodyImg, x, y, 15, 15);
       }
     }
   }
@@ -489,18 +467,11 @@ class Walls {
     this.pos = [new helpers.Vec(W / 20, H / 2), new helpers.Vec(W / 10, H / 2), new helpers.Vec(W / 5, H / 2), new helpers.Vec(W / 5, H / 20), new helpers.Vec(W / 5, H / 10), new helpers.Vec(W / 5, H / 5), new helpers.Vec(W / 10, H / 2), new helpers.Vec(W / 4, H / 5)];
   }
   draw() {
+    wallCTX.clearRect(0, 0, wallCanvas.width, wallCanvas.height);
     if (buildWalls) {
       this.pos.forEach((elem) => {
         let {x, y} = elem;
-        // CTX.fillStyle = "black";
-        // CTX.fillRect(x, y, cellSize, cellSize);
-        if (detect.os() === 'iOS') {
-          CTX.fillStyle = CTX.createPattern(monsterImg, 'repeat');
-          CTX.fillRect(x, y, cellSize, cellSize);
-        }
-        else {
-          CTX.drawImage(monsterImg, x, y, cellSize, cellSize);
-        }
+        wallCTX.drawImage(monsterImg, x, y, cellSize, cellSize);
       });
     }
   }
@@ -534,41 +505,21 @@ class Food {
     }
   }
   draw() {
+    foodCTX.clearRect(0, 0, foodCanvas.width, foodCanvas.height);
     let { x, y } = this.pos;
-    CTX.globalCompositeOperation = "lighter";
-    CTX.shadowBlur = 20;
-    CTX.shadowColor = this.color;
-    CTX.fillStyle = this.color;
+    // foodCTX.globalCompositeOperation = "lighter";
+    // foodCTX.shadowBlur = 20;
+    // foodCTX.shadowColor = this.color;
+    // foodCTX.fillStyle = this.color;
     if (score === 3) {
-      if (detect.os() === 'iOS') {
-        CTX.fillStyle = CTX.createPattern(ufoImg, 'repeat');
-        CTX.fillRect(x, y, this.size, this.size);
-      }
-      else {
-        CTX.drawImage(ufoImg, x, y, this.size, this.size);
-      }
+      foodCTX.drawImage(ufoImg, x, y, this.size, this.size);
     }
     else if (score === 6) {
-      if (detect.os() === 'iOS') {
-        CTX.fillStyle = CTX.createPattern(blackHoleImg, 'repeat');
-        CTX.fillRect(x, y, this.size, this.size);
-      }
-      else {
-        CTX.drawImage(blackHoleImg, x, y, this.size, this.size);
-      }
+      foodCTX.drawImage(blackHoleImg, x, y, this.size, this.size);
     }
     else {
-      if (detect.os() === 'iOS') {
-        CTX.fillStyle = CTX.createPattern(this.foodImg, 'repeat');
-        CTX.fillRect(x, y, this.size, this.size);
-      }
-      else {
-        CTX.drawImage(this.foodImg, x, y, this.size, this.size);
-      }
-      // CTX.fillRect(x, y, this.size, this.size);
+      foodCTX.drawImage(this.foodImg, x, y, this.size, this.size);
     }
-    CTX.globalCompositeOperation = "source-over";
-    CTX.shadowBlur = 0;
   }
   wallsCollision(x, y) {
     this.bool = false;
@@ -582,14 +533,6 @@ class Food {
   spawn() {
     let randX = ~~(Math.random() * cells) * this.size;
     let randY = ~~(Math.random() * cells) * this.size;
-    // if (buildWalls) {
-    //   this.wallsCollision(randX, randY);
-    //   while (this.bool) {
-    //     randX = ~~(Math.random() * cells) * this.size;
-    //     randY = ~~(Math.random() * cells) * this.size;
-    //     this.wallsCollision(randX, randY);
-    //   }
-    // }
       this.wallsCollision(randX, randY);
       while (this.bool) {
         randX = ~~(Math.random() * cells) * this.size;
@@ -642,6 +585,7 @@ class Particle {
 
 function incrementScore() {
   score++;
+  // snake.color = currentHue = `hsl(${helpers.randHue()}, 100%, 50%)`;
   food.getRandomImg();
   dom_score.innerText = score.toString().padStart(2, "0");
   if (score === 4) {
@@ -666,6 +610,9 @@ function particleSplash() {
 
 function clear() {
   CTX.clearRect(0, 0, W, H);
+  foodCTX.clearRect(0, 0, W, H);
+  snakeCTX.clearRect(0, 0, W, H);
+  wallCTX.clearRect(0, 0, W, H);
 }
 
 function initialize() {
@@ -683,7 +630,6 @@ function initialize() {
 function loop() {
   clear();
   if (!isGameOver) {
-    // requestID = setTimeout(loop, 1000 / 60);
     requestID = requestAnimationFrame(loop)
     helpers.drawGrid();
     snake.update();
@@ -700,12 +646,10 @@ function loop() {
 }
 
 function pause() {
-  // clearTimeout(requestID);
   cancelAnimationFrame(requestID)
 }
 
 function continiue() {
-  // requestID = setTimeout(loop, 1000 / 60);
   requestID = requestAnimationFrame(loop)
 }
 
@@ -729,7 +673,6 @@ function reset() {
   food.spawn();
   KEY.resetState();
   isGameOver = false;
-  // clearTimeout(requestID);
   cancelAnimationFrame(requestID);
   requestID = null;
   loop();

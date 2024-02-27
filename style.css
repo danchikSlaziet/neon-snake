@@ -161,6 +161,7 @@ h2 {
   flex-direction: column;
   align-items: center;
   height: 100%;
+  z-index: 5;
   
   /* margin-bottom: 20px; */
 }
@@ -901,4 +902,85 @@ border-top: 14px solid #6e7888;
 #ArrowRight {
   top: 50px;
   right: -15px;
+}
+#snakeCanvas {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+  margin: 0;
+}
+#foodCanvas {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+  margin: 0;
+}
+#wallCanvas {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+  margin: 0;
+}
+
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.clouds__cloud {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+}
+.clouds__cloud_top {
+  top: 0;
+  z-index: 3;
+  animation: do-levitation-y 1s alternate ease-in-out infinite;
+}
+.clouds__cloud_middle {
+  top: 0;
+  z-index: 2;
+  animation: do-levitation-y 1.5s alternate ease-in-out infinite;
+}
+.clouds__cloud_bottom {
+  top: 0;
+  z-index: 1;
+  animation: do-levitation-y 2s alternate ease-in-out infinite;
+}
+
+@keyframes do-levitation-y {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.main-moon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 0;
+  width: 170px;
+  animation: do-scale 2s alternate ease-in-out infinite;
+}
+
+@keyframes do-scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
