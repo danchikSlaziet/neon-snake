@@ -27,13 +27,33 @@ const firstPageButton = firstPage.querySelector('.first-page__button');
 firstPageButton.addEventListener('click', () => {
   firstPage.classList.remove('first-page_active');
 });
+let detect = new MobileDetect(window.navigator.userAgent);
 
 const img = document.querySelector('.arrow-btn');
 
 const headImg = new Image();
 headImg.src = './images/snake-head.svg';
 const bodyImg = new Image();
-bodyImg.src = './images/snake-body.svg';
+if (detect.os() === "AndroidOS") {
+  bodyImg.src = './images/snake-body.png';
+}
+else {
+  bodyImg.src = './images/snake-body.svg';
+}
+
+if (detect.os() === 'iOS' || detect.os() === 'macOS') {
+  document.getElementById('ArrowUp').src = './images/arrow-up.png';
+  document.getElementById('ArrowUp').style.width = "137px";
+  document.getElementById('ArrowDown').src = './images/arrow-down.png';
+  document.getElementById('ArrowDown').style.width = "137px";
+  document.getElementById('ArrowLeft').src = './images/arrow-left.png';
+  document.getElementById('ArrowLeft').style.width = "125px";
+  document.getElementById('ArrowRight').src = './images/arrow-right.png';
+  document.getElementById('ArrowRight').style.width = "125px";
+}
+
+const bodyImgAndroid = new Image();
+bodyImgAndroid.src - './images/snake-body.png';
 const foodImg1 = new Image();
 const foodImg2 = new Image();
 const foodImg3 = new Image();
@@ -62,13 +82,6 @@ function rotateHead(x, y, degrees) {
   // Восстанавливаем предыдущее состояние контекста холста
   snakeCTX.restore();
 }
-function drawImage(src, x, y, width, height) {
-  const image = new Image();
-  image.onload = function() {
-    CTX.drawImage(image, x, y, width, height);
-  }
-  image.src = src;
-}
 
 
 let hexSnake = '';
@@ -88,7 +101,7 @@ infoPage2Button.addEventListener('click', () => {
   setTimeout(() => {  continiue();}, 400)
 })
 
-let detect = new MobileDetect(window.navigator.userAgent);
+
 
 if (detect.os() == null) {
   console.log('It is PC');
@@ -309,26 +322,26 @@ let KEY = {
       addEventListener(      
         "keydown",
         (e) => {
-          if ((e.key === "ArrowUp" || e.key === "w") && this.ArrowDown) return;
-          if ((e.key === "ArrowDown" || e.key === "s") && this.ArrowUp) return;
-          if ((e.key === "ArrowLeft" || e.key === "a") && this.ArrowRight) return;
-          if ((e.key === "ArrowRight" || e.key === "d") && this.ArrowLeft) return;
-          if (e.key === "ArrowUp" || e.key === "w") {
+          if ((e.key === "ArrowUp" || e.key.toLowerCase() === "w") && this.ArrowDown) return;
+          if ((e.key === "ArrowDown" || e.key.toLowerCase() === "s") && this.ArrowUp) return;
+          if ((e.key === "ArrowLeft" || e.key.toLowerCase() === "a") && this.ArrowRight) return;
+          if ((e.key === "ArrowRight" || e.key.toLowerCase() === "d") && this.ArrowLeft) return;
+          if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") {
             this.ArrowUp = true;
             currentDegree = 90;
             directionName = 'ArrowUp';
           }
-          if (e.key === "ArrowDown" || e.key === "s") {
+          if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") {
             this.ArrowDown = true;
             currentDegree = -90;
             directionName = 'ArrowDown';
           } 
-          if (e.key === "ArrowLeft" || e.key === "a") {
+          if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
             this.ArrowLeft = true;
             currentDegree = 0;
             directionName = 'ArrowLeft';
           } 
-          if (e.key === "ArrowRight" || e.key === "d") {
+          if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
             this.ArrowRight = true;
             currentDegree = 180;
             directionName = 'ArrowRight';
