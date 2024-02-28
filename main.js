@@ -114,39 +114,58 @@ const snakeCTX = snakeCanvas.getContext('2d');
 const originalWidth = 300; // Исходная ширина холста
 const originalHeight = 300; // Исходная высота холста
 const scaleFactor = 2; // Масштабный коэффициент
-snakeCanvas.width = originalWidth * scaleFactor; // Увеличенная ширина
-snakeCanvas.height = originalHeight * scaleFactor; // Увеличенная высота
-// Установка размеров холста через CSS для сжатия
-snakeCanvas.style.width = originalWidth + 4.8 + 'px'; // Исходная ширина
-snakeCanvas.style.height = originalHeight + 4.8 + 'px'; // Исходная высота
-// Рисование на увеличенном холсте
-snakeCTX.scale(scaleFactor, scaleFactor);
+if (detect.os() === 'AndroidOS') {
+  snakeCanvas.width = 300;
+  snakeCanvas.height = 300;
+}
+else {
+  snakeCanvas.width = originalWidth * scaleFactor; // Увеличенная ширина
+  snakeCanvas.height = originalHeight * scaleFactor; // Увеличенная высота
+  // Установка размеров холста через CSS для сжатия
+  snakeCanvas.style.width = originalWidth + 4.8 + 'px'; // Исходная ширина
+  snakeCanvas.style.height = originalHeight + 4.8 + 'px'; // Исходная высота
+  // Рисование на увеличенном холсте
+  snakeCTX.scale(scaleFactor, scaleFactor);
+}
+
 
 const foodCanvas = document.getElementById('foodCanvas');
 const foodCTX = foodCanvas.getContext('2d');
 const originalWidthF = 300; // Исходная ширина холста
 const originalHeightF = 300; // Исходная высота холста
 const scaleFactorF = 2; // Масштабный коэффициент
-foodCanvas.width = originalWidthF * scaleFactorF; // Увеличенная ширина
-foodCanvas.height = originalHeightF * scaleFactorF; // Увеличенная высота
-// Установка размеров холста через CSS для сжатия
-foodCanvas.style.width = originalWidthF + 4.8 + 'px'; // Исходная ширина
-foodCanvas.style.height = originalHeightF + 4.8 + 'px'; // Исходная высота
-// Рисование на увеличенном холсте
-foodCTX.scale(scaleFactorF, scaleFactorF);
+if (detect.os() === 'AndroidOS') {
+  foodCanvas.width = 300;
+  foodCanvas.height = 300;
+}
+else {
+  foodCanvas.width = originalWidthF * scaleFactorF; // Увеличенная ширина
+  foodCanvas.height = originalHeightF * scaleFactorF; // Увеличенная высота
+  // Установка размеров холста через CSS для сжатия
+  foodCanvas.style.width = originalWidthF + 4.8 + 'px'; // Исходная ширина
+  foodCanvas.style.height = originalHeightF + 4.8 + 'px'; // Исходная высота
+  // Рисование на увеличенном холсте
+  foodCTX.scale(scaleFactorF, scaleFactorF);
+}
 
 const wallCanvas = document.getElementById('wallCanvas');
 const wallCTX = wallCanvas.getContext('2d');
 const originalWidthW = 300; // Исходная ширина холста
 const originalHeightW = 300; // Исходная высота холста
 const scaleFactorW = 2; // Масштабный коэффициент
-wallCanvas.width = originalWidthF * scaleFactorF; // Увеличенная ширина
-wallCanvas.height = originalHeightF * scaleFactorF; // Увеличенная высота
-// Установка размеров холста через CSS для сжатия
-wallCanvas.style.width = originalWidthW + 4.8 + 'px'; // Исходная ширина
-wallCanvas.style.height = originalHeightW + 4.8 + 'px'; // Исходная высота
-// Рисование на увеличенном холсте
-wallCTX.scale(scaleFactorW, scaleFactorW);
+if (detect.os() === 'AndroidOS') {
+  wallCanvas.width = 300;
+  wallCanvas.height = 300;
+}
+else {
+  wallCanvas.width = originalWidthF * scaleFactorF; // Увеличенная ширина
+  wallCanvas.height = originalHeightF * scaleFactorF; // Увеличенная высота
+  // Установка размеров холста через CSS для сжатия
+  wallCanvas.style.width = originalWidthW + 4.8 + 'px'; // Исходная ширина
+  wallCanvas.style.height = originalHeightW + 4.8 + 'px'; // Исходная высота
+  // Рисование на увеличенном холсте
+  wallCTX.scale(scaleFactorW, scaleFactorW);
+}
 
 let snake,
   food,
